@@ -1,0 +1,5 @@
+Stress	Mapped_TF_Genes_Tested	Significant_TF_Genes	Upregulated_Significant_TF_Genes	Downregulated_Significant_TF_Genes
+Cold	1522	136	101	35
+Drought	1522	173	89	84
+Heat	1522	212	126	86
+Salinity	1522	159	97	62

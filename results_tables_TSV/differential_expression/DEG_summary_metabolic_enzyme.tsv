@@ -1,0 +1,5 @@
+Comparison	Total_tested_genes	Metabolic_enzyme_DEGs	Upregulated	Downregulated
+Cold_vs_Control	25968	616	323	293
+Drought_vs_Control	25968	945	478	467
+Heat_vs_Control	25968	1657	948	709
+Salinity_vs_Control	25968	864	583	281

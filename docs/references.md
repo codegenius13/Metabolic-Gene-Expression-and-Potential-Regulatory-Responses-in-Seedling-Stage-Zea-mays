@@ -1,0 +1,1 @@
+Li P, Cao W, Fang H, Xu S, Yin S, Zhang Y, Lin D, Wang J, Chen Y, Xu C and Yang Z (2017) "Transcriptomic Profiling of the Maize (Zea mays L.) Leaf Response to Abiotic Stresses at the Seedling Stage". Frontiers Plant Science. Volume 8, Issue 290. doi: 10.3389/fpls.2017.00290

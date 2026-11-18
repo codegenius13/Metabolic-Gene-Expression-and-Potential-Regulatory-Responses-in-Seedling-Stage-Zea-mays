@@ -1,0 +1,9 @@
+GO_ID	Description	Stress	DEG_Count	Up_Count	Down_Count	Up_Proportion	Down_Proportion	Median_log2FC	Mean_log2FC	Direction
+GO:0009693	ethylene biosynthetic process	Cold	20	18	2	0.9	0.1	3.38158519015306	3.46637180674717	Predominantly upregulated
+GO:0009773	photosynthetic electron transport in photosystem I	Drought	10	0	10	0.0	1.0	-1.716454749824545	-1.938456769167218	Predominantly downregulated
+GO:0034484	raffinose catabolic process	Drought	5	2	3	0.4	0.6	-2.72112683961217	-2.2741624050858276	Mixed
+GO:0006457	protein folding	Heat	54	45	9	0.8333333333333334	0.16666666666666666	2.924312134734095	3.187265244111627	Predominantly upregulated
+GO:0009693	ethylene biosynthetic process	Salinity	19	18	1	0.9473684210526315	0.05263157894736842	2.95991867472889	3.460801466546884	Predominantly upregulated
+GO:0009695	jasmonic acid biosynthetic process	Salinity	25	20	5	0.8	0.2	2.71491276700792	2.288277337984666	Predominantly upregulated
+GO:0005992	trehalose biosynthetic process	Salinity	9	1	8	0.1111111111111111	0.8888888888888888	-2.31375349268081	-1.8595632032612477	Predominantly downregulated
+GO:0009809	lignin biosynthetic process	Salinity	16	15	1	0.9375	0.0625	2.90836075664837	2.7138683329580013	Predominantly upregulated

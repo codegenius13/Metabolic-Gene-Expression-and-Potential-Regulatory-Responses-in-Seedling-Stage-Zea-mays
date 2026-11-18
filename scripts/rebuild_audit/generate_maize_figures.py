@@ -1,0 +1,1047 @@
+#!/usr/bin/env python3
+
+import csv
+import math
+import sys
+from pathlib import Path
+from collections import Counter, defaultdict
+
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+except ImportError:
+    print("ERROR: matplotlib and numpy are required.")
+    print("Install them with: python3 -m pip install matplotlib numpy")
+    sys.exit(1)
+
+
+ROOT = Path(__file__).resolve().parent
+Q1 = ROOT / "07_results" / "01_answer"
+Q2 = ROOT / "07_results" / "02_answer"
+
+Q1_TABLES = Q1 / "tables"
+Q2_TABLES = Q2 / "tables"
+
+Q1_FIGURES = Q1 / "figures"
+Q2_FIGURES = Q2 / "figures"
+
+Q1_FIGURES.mkdir(parents=True, exist_ok=True)
+Q2_FIGURES.mkdir(parents=True, exist_ok=True)
+
+STRESSES = ["Cold", "Drought", "Heat", "Salinity"]
+
+COLORS = {
+    "Cold": "#3977A8",
+    "Drought": "#D18B35",
+    "Heat": "#C65B55",
+    "Salinity": "#559B75",
+}
+
+plt.rcParams.update({
+    "font.family": "DejaVu Sans",
+    "font.size": 10,
+    "axes.titlesize": 13,
+    "axes.labelsize": 10,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "figure.dpi": 120,
+    "savefig.dpi": 300,
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+})
+
+
+def read_tsv(path):
+    if not path.exists():
+        raise FileNotFoundError(f"Required table not found: {path}")
+
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def number(value, default=float("nan")):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def is_true(value):
+    return str(value).strip().lower() in ("true", "1", "yes")
+
+
+def save_figure(fig, directory, filename):
+    png = directory / f"{filename}.png"
+    pdf = directory / f"{filename}.pdf"
+
+    fig.savefig(png, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf, bbox_inches="tight")
+    plt.close(fig)
+
+    print(f"Saved: {png.relative_to(ROOT)}")
+    print(f"Saved: {pdf.relative_to(ROOT)}")
+
+
+def stress_color(stress):
+    return COLORS.get(stress, "#777777")
+
+
+# ============================================================
+# Q1 FIGURE 1: GO ENRICHMENT DOT PLOT
+# ============================================================
+
+
+
+def q1_enrichment_dotplot():
+    rows = read_tsv(
+        Q1_TABLES / "Q1_metabolic_process_enrichment.tsv"
+    )
+
+    # Retain only significantly enriched processes.
+    rows = [
+        r for r in rows
+        if 0 < number(r.get("p.adjust")) <= 0.05
+        and number(r.get("Count"), 0) > 0
+    ]
+
+    if not rows:
+        print("Skipping Q1 enrichment bubble plot: no valid rows.")
+        return
+
+    for row in rows:
+        row["_significance"] = -math.log10(
+            max(number(row["p.adjust"]), 1e-300)
+        )
+
+    # Larger canvas gives each stress panel more room.
+    fig, axes = plt.subplots(
+        2, 2,
+        figsize=(20, 15),
+        gridspec_kw={
+            "hspace": 0.48,
+            "wspace": 0.38
+        }
+    )
+
+    axes = axes.flatten()
+
+    # Same bubble-size mapping across all stress panels.
+    def bubble_size(count):
+        return 55 + 8 * count
+
+    cmap = plt.get_cmap("Reds")
+
+    for ax, stress in zip(axes, STRESSES):
+
+        subset = [
+            row for row in rows
+            if row["Stress"] == stress
+        ]
+
+        ax.set_facecolor("#FFFFFF")
+
+        # Individual panel border.
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_color("#B8B8B8")
+            spine.set_linewidth(1.2)
+
+        ax.tick_params(
+            axis="both",
+            which="both",
+            length=0,
+            labelsize=9
+        )
+
+        ax.set_title(
+            stress.upper() + " STRESS",
+            fontsize=14,
+            fontweight="bold",
+            color="#8B1A1A",
+            pad=16
+        )
+
+        if not subset:
+            ax.text(
+                0.5, 0.5,
+                "No significantly enriched process",
+                transform=ax.transAxes,
+                ha="center",
+                va="center",
+                fontsize=11,
+                color="#777777"
+            )
+            ax.set_axis_off()
+            continue
+
+        subset.sort(
+            key=lambda row: row["_significance"],
+            reverse=True
+        )
+
+        significance = np.array([
+            row["_significance"] for row in subset
+        ])
+
+        counts = np.array([
+            number(row["Count"], 0) for row in subset
+        ])
+
+        y = np.arange(len(subset))
+
+        # Independent significance range for this stress.
+        local_max = max(float(np.max(significance)), 1.0)
+        norm = plt.Normalize(
+            vmin=0,
+            vmax=local_max * 1.08
+        )
+
+        scatter = ax.scatter(
+            significance,
+            y,
+            s=[bubble_size(count) for count in counts],
+            c=significance,
+            cmap=cmap,
+            norm=norm,
+            edgecolors="#651010",
+            linewidths=1.0,
+            alpha=0.98,
+            zorder=3
+        )
+
+        # GO identifiers only; pathway names are omitted.
+        ax.set_yticks(y)
+        ax.set_yticklabels(
+            [row["ID"] for row in subset],
+            fontsize=8,
+            color="#555555"
+        )
+        ax.tick_params(axis="y", pad=9)
+        ax.invert_yaxis()
+
+        # Independent horizontal range for each stress.
+        ax.set_xlim(0, local_max * 1.30)
+
+        ax.set_xlabel(
+            r"$-\log_{10}$(adjusted p-value)",
+            fontsize=11,
+            fontweight="bold",
+            labelpad=10
+        )
+
+        ax.grid(
+            axis="x",
+            linestyle="--",
+            linewidth=0.8,
+            color="#D5D5D5",
+            alpha=0.8,
+            zorder=0
+        )
+        ax.set_axisbelow(True)
+        ax.margins(y=0.30)
+
+        # Separate red significance gradient for each panel.
+        colorbar = fig.colorbar(
+            scatter,
+            ax=ax,
+            orientation="vertical",
+            fraction=0.045,
+            pad=0.035,
+            aspect=25
+        )
+
+        colorbar.set_label(
+            r"$-\log_{10}$(adjusted p-value)",
+            fontsize=9,
+            fontweight="bold",
+            labelpad=9
+        )
+        colorbar.ax.tick_params(labelsize=8)
+        colorbar.outline.set_linewidth(0.8)
+
+    # Shared bubble-size legend.
+    legend_counts = [10, 30, 50]
+
+    size_handles = [
+        plt.scatter(
+            [],
+            [],
+            s=bubble_size(count),
+            color="#C73535",
+            edgecolors="#651010",
+            linewidths=0.8,
+            alpha=0.95,
+            label=str(count)
+        )
+        for count in legend_counts
+    ]
+
+    fig.legend(
+        handles=size_handles,
+        title="Number of contributing DEGs",
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.035),
+        ncol=3,
+        frameon=False,
+        fontsize=10,
+        title_fontsize=10,
+        handletextpad=1.0,
+        columnspacing=2.0
+    )
+
+    fig.suptitle(
+        "Significant Metabolic Gene Ontology Enrichment "
+        "Across Stress Conditions",
+        fontsize=18,
+        fontweight="bold",
+        y=0.975
+    )
+
+    fig.text(
+        0.5, 0.012,
+        "Bubble size represents the number of contributing DEGs. "
+        "Red intensity represents enrichment significance. "
+        "Each stress panel has its own significance scale. "
+        "Only processes with adjusted p-value <= 0.05 are displayed.",
+        ha="center",
+        fontsize=9,
+        color="#555555"
+    )
+
+    # Corrected margins: no longer reserve excessive space
+    # for pathway names, since only compact GO IDs are shown.
+    fig.subplots_adjust(
+        left=0.105,
+        right=0.955,
+        top=0.91,
+        bottom=0.13,
+        wspace=0.38,
+        hspace=0.48
+    )
+
+    save_figure(
+        fig,
+        Q1_FIGURES,
+        "Q1_GO_enrichment_dotplot"
+    )
+
+def q1_process_direction():
+    rows = read_tsv(
+        Q1_TABLES / "Q1_metabolic_process_direction.tsv"
+    )
+
+    rows = [
+        r for r in rows
+        if not math.isnan(number(r.get("Median_log2FC")))
+    ]
+
+    if not rows:
+        print("Skipping Q1 process direction plot: no valid rows.")
+        return
+
+    rows.sort(
+        key=lambda r: (
+            STRESSES.index(r["Stress"])
+            if r["Stress"] in STRESSES else 99,
+            r["Description"]
+        )
+    )
+
+    n = len(rows)
+    y = np.arange(n)
+
+    fig = plt.figure(figsize=(19, max(7.5, 0.88 * n + 2.0)))
+
+    gs = fig.add_gridspec(
+        1, 4,
+        width_ratios=[1.35, 4.0, 7.0, 3.2],
+        wspace=0.035
+    )
+
+    id_ax = fig.add_subplot(gs[0, 0])
+    label_ax = fig.add_subplot(gs[0, 1])
+    ax = fig.add_subplot(gs[0, 2])
+    class_ax = fig.add_subplot(gs[0, 3])
+
+    # Align the information columns and the bar plot.
+    for text_ax in (id_ax, label_ax, class_ax):
+        text_ax.set_ylim(-0.5, n - 0.5)
+        text_ax.invert_yaxis()
+        text_ax.axis("off")
+
+    id_ax.set_xlim(0, 1)
+    label_ax.set_xlim(0, 1)
+    class_ax.set_xlim(0, 1)
+
+    ax.set_ylim(-0.5, n - 0.5)
+    ax.invert_yaxis()
+
+    values = [
+        number(row["Median_log2FC"])
+        for row in rows
+    ]
+
+    max_value = max(abs(v) for v in values)
+    limit = max_value * 1.38 if max_value > 0 else 1
+
+    ax.set_xlim(-limit, limit)
+
+    # Separate GO IDs, process names and stress labels.
+    for i, row in enumerate(rows):
+        id_ax.text(
+            0.98, i, row["GO_ID"],
+            ha="right", va="center",
+            fontsize=9.5, fontweight="bold",
+            color="#333333"
+        )
+
+        label_ax.text(
+            0.02, i, row["Description"],
+            ha="left", va="center",
+            fontsize=10, fontweight="bold",
+            color="#222222"
+        )
+
+        label_ax.text(
+            0.02, i + 0.25, f'Stress: {row["Stress"]}',
+            ha="left", va="center",
+            fontsize=8.5,
+            color=stress_color(row["Stress"])
+        )
+
+    # Horizontal diverging bars.
+    for i, row in enumerate(rows):
+        value = values[i]
+
+        ax.barh(
+            i,
+            value,
+            color=stress_color(row["Stress"]),
+            edgecolor="#222222",
+            linewidth=0.65,
+            alpha=0.93,
+            height=0.62,
+            zorder=3
+        )
+
+        # Place numerical values outside the bar endpoints.
+        offset = limit * 0.025
+
+        if value >= 0:
+            ax.text(
+                value + offset, i,
+                f"+{value:.2f}",
+                ha="left", va="center",
+                fontsize=9, fontweight="bold",
+                color="#222222"
+            )
+        else:
+            ax.text(
+                value - offset, i,
+                f"{value:.2f}",
+                ha="right", va="center",
+                fontsize=9, fontweight="bold",
+                color="#222222"
+            )
+
+    ax.axvline(
+        0, color="#222222",
+        linewidth=1.3, zorder=2
+    )
+
+    ax.set_xlabel(
+        "Median log2 fold change",
+        fontsize=11, fontweight="bold",
+        labelpad=10
+    )
+
+    ax.set_yticks(y)
+    ax.set_yticklabels([])
+    ax.tick_params(axis="y", length=0)
+    ax.tick_params(axis="x", labelsize=9)
+
+    ax.grid(
+        axis="x",
+        linestyle="--",
+        linewidth=0.8,
+        alpha=0.35,
+        zorder=0
+    )
+
+    ax.set_axisbelow(True)
+
+    ax.set_title(
+        "Expression direction of enriched biological processes",
+        fontsize=14, fontweight="bold", pad=18
+    )
+
+    # Explicitly display the classification and gene counts.
+    for i, row in enumerate(rows):
+        direction = row["Direction"]
+
+        if direction == "Predominantly upregulated":
+            label = "Predominantly upregulated"
+            color = "#287A4B"
+        elif direction == "Predominantly downregulated":
+            label = "Predominantly downregulated"
+            color = "#B44444"
+        else:
+            label = "Mixed"
+            color = "#B7791F"
+
+        up = int(row["Up_Count"])
+        down = int(row["Down_Count"])
+
+        class_ax.text(
+            0.02, i - 0.07, label,
+            ha="left", va="center",
+            fontsize=9.5, fontweight="bold",
+            color=color
+        )
+
+        class_ax.text(
+            0.02, i + 0.19,
+            f"{up} up / {down} down",
+            ha="left", va="center",
+            fontsize=8.5,
+            color="#555555"
+        )
+
+    # Stress legend.
+    handles = [
+        plt.Rectangle(
+            (0, 0), 1, 1,
+            color=COLORS[s],
+            label=s
+        )
+        for s in STRESSES
+        if any(row["Stress"] == s for row in rows)
+    ]
+
+    ax.legend(
+        handles=handles,
+        title="Stress condition",
+        frameon=False,
+        ncol=4,
+        fontsize=8.5,
+        title_fontsize=8.5,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.01)
+    )
+
+    fig.text(
+        0.5, 0.025,
+        "Bars show median log2 fold change. Positive values extend right; "
+        "negative values extend left. Direction labels use the 70% "
+        "expression-direction classification rule.",
+        ha="center",
+        fontsize=8.5,
+        color="#555555"
+    )
+
+    fig.subplots_adjust(
+        left=0.035, right=0.985,
+        top=0.84, bottom=0.12
+    )
+
+    save_figure(
+        fig, Q1_FIGURES,
+        "Q1_metabolic_process_expression_direction"
+    )
+
+
+# ============================================================
+# Q1 FIGURE 3: SHARED PROCESS ENRICHMENT HEATMAP
+# ============================================================
+
+def q1_shared_process_heatmap():
+    rows = read_tsv(
+        Q1_TABLES / "Q1_metabolic_process_enrichment.tsv"
+    )
+
+    if not rows:
+        print("Skipping Q1 process heatmap: no enrichment rows.")
+        return
+
+    descriptions = {}
+
+    for row in rows:
+        descriptions[row["ID"]] = row["Description"]
+
+    terms = sorted(
+        descriptions,
+        key=lambda go: descriptions[go].lower()
+    )
+
+    matrix = np.zeros((len(terms), len(STRESSES)))
+
+    for row in rows:
+        go = row["ID"]
+        stress = row["Stress"]
+
+        if stress not in STRESSES:
+            continue
+
+        i = terms.index(go)
+        j = STRESSES.index(stress)
+
+        padj = number(row.get("p.adjust"))
+
+        if padj > 0:
+            matrix[i, j] = -math.log10(max(padj, 1e-300))
+
+    labels = [
+        f"{descriptions[go]} [{go}]"
+        for go in terms
+    ]
+
+    fig_height = max(4.5, 0.55 * len(terms) + 1.8)
+    fig, ax = plt.subplots(figsize=(10, fig_height))
+
+    image = ax.imshow(
+        matrix,
+        aspect="auto",
+        cmap="YlOrRd",
+        interpolation="nearest",
+    )
+
+    ax.set_xticks(np.arange(len(STRESSES)))
+    ax.set_xticklabels(STRESSES)
+
+    ax.set_yticks(np.arange(len(terms)))
+    ax.set_yticklabels(labels)
+
+    ax.set_title(
+        "Enrichment significance of metabolic biological processes across stresses"
+    )
+    ax.set_xlabel("Stress")
+    ax.set_ylabel("Biological process")
+
+    for i in range(len(terms)):
+        for j in range(len(STRESSES)):
+            if matrix[i, j] > 0:
+                ax.text(
+                    j, i,
+                    f"{matrix[i, j]:.1f}",
+                    ha="center",
+                    va="center",
+                    fontsize=8,
+                    color="black",
+                )
+
+    colorbar = fig.colorbar(image, ax=ax, pad=0.02)
+    colorbar.set_label("-log10(adjusted p-value)")
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q1_FIGURES,
+        "Q1_shared_process_enrichment_heatmap"
+    )
+
+
+# ============================================================
+# Q2 FIGURE 1: CANDIDATE GENES BY STRESS
+# ============================================================
+
+def q2_candidate_counts():
+    rows = read_tsv(
+        Q2_TABLES / "Q2_metabolic_enzyme_candidates.tsv"
+    )
+
+    counts = {}
+
+    for stress in STRESSES:
+        genes = {
+            row["Gene_ID"]
+            for row in rows
+            if row["Stress"] == stress and row.get("Gene_ID")
+        }
+        counts[stress] = len(genes)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    bars = ax.bar(
+        STRESSES,
+        [counts[s] for s in STRESSES],
+        color=[COLORS[s] for s in STRESSES],
+        edgecolor="black",
+        linewidth=0.5,
+    )
+
+    for bar, stress in zip(bars, STRESSES):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{counts[stress]:,}",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+    ax.set_ylabel("Unique metabolic-enzyme candidate genes")
+    ax.set_xlabel("Stress")
+    ax.set_title(
+        "Metabolic-enzyme-associated differentially expressed candidates"
+    )
+    ax.grid(axis="y", linestyle="--", alpha=0.3)
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q2_FIGURES,
+        "Q2_metabolic_candidate_gene_counts"
+    )
+
+
+# ============================================================
+# Q2 FIGURE 2: CANDIDATE CROSS-STRESS OVERLAP
+# ============================================================
+
+def q2_candidate_overlap():
+    rows = read_tsv(
+        Q2_TABLES / "Q2_candidate_cross_stress_overlap.tsv"
+    )
+
+    rows.sort(key=lambda r: int(r["Stress_Count"]))
+
+    if not rows:
+        print("Skipping Q2 candidate overlap: no rows.")
+        return
+
+    x = [int(r["Stress_Count"]) for r in rows]
+    y = [int(r["Unique_Genes"]) for r in rows]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    bars = ax.bar(
+        [str(v) for v in x],
+        y,
+        color="#6B8E9E",
+        edgecolor="black",
+        linewidth=0.5,
+    )
+
+    for bar, value in zip(bars, y):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{value:,}",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+    ax.set_xlabel("Number of stress conditions")
+    ax.set_ylabel("Number of unique candidate genes")
+    ax.set_title(
+        "Distribution of metabolic-enzyme candidates across stress conditions"
+    )
+    ax.grid(axis="y", linestyle="--", alpha=0.3)
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q2_FIGURES,
+        "Q2_candidate_cross_stress_overlap"
+    )
+
+
+# ============================================================
+# Q2 FIGURE 3: SIGNIFICANT TF RESPONSES
+# ============================================================
+
+def q2_tf_summary():
+    rows = read_tsv(
+        Q2_TABLES / "Q2_TF_stress_summary.tsv"
+    )
+
+    by_stress = {
+        row["Stress"]: row
+        for row in rows
+    }
+
+    available = [
+        stress for stress in STRESSES
+        if stress in by_stress
+    ]
+
+    if not available:
+        print("Skipping Q2 TF summary: no rows.")
+        return
+
+    up = [
+        int(by_stress[s]["Upregulated_Significant_TF_Genes"])
+        for s in available
+    ]
+
+    down = [
+        int(by_stress[s]["Downregulated_Significant_TF_Genes"])
+        for s in available
+    ]
+
+    tested = [
+        int(by_stress[s]["Mapped_TF_Genes_Tested"])
+        for s in available
+    ]
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+
+    x = np.arange(len(available))
+
+    ax.bar(
+        x, up,
+        color="#4C9B75",
+        label="Significantly upregulated",
+        edgecolor="black",
+        linewidth=0.4,
+    )
+
+    ax.bar(
+        x, down,
+        bottom=up,
+        color="#C65B55",
+        label="Significantly downregulated",
+        edgecolor="black",
+        linewidth=0.4,
+    )
+
+    for i, stress in enumerate(available):
+        total = up[i] + down[i]
+        ax.text(
+            i, total + 2,
+            f"{total}\n({tested[i]:,} tested)",
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(available)
+
+    ax.set_ylabel("Number of significant TF target genes")
+    ax.set_xlabel("Stress")
+    ax.set_title(
+        "Significant transcription-factor-associated expression responses"
+    )
+
+    ax.legend(frameon=False)
+    ax.grid(axis="y", linestyle="--", alpha=0.3)
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q2_FIGURES,
+        "Q2_significant_TF_response_summary"
+    )
+
+
+# ============================================================
+# Q2 FIGURE 4: TF CROSS-STRESS EXPRESSION HEATMAP
+# ============================================================
+
+def q2_tf_heatmap():
+    rows = read_tsv(
+        Q2_TABLES / "Q2_TF_cross_stress_expression_matrix.tsv"
+    )
+
+    significant_rows = []
+
+    for row in rows:
+        if any(
+            is_true(row.get(f"{stress}_significant", "FALSE"))
+            for stress in STRESSES
+        ):
+            significant_rows.append(row)
+
+    if not significant_rows:
+        print("Skipping Q2 TF heatmap: no significant TF genes.")
+        return
+
+    # Rank genes by their largest absolute log2FC among significant contrasts.
+    def gene_score(row):
+        values = []
+
+        for stress in STRESSES:
+            if is_true(row.get(f"{stress}_significant", "FALSE")):
+                value = number(row.get(f"{stress}_log2FoldChange"))
+                if not math.isnan(value):
+                    values.append(abs(value))
+
+        return max(values) if values else 0
+
+    significant_rows.sort(
+        key=gene_score,
+        reverse=True,
+    )
+
+    # Display up to 30 genes to keep labels readable.
+    selected = significant_rows[:30]
+
+    matrix = np.array([
+        [
+            number(row.get(f"{stress}_log2FoldChange"), 0)
+            for stress in STRESSES
+        ]
+        for row in selected
+    ])
+
+    labels = [row["Gene_ID"] for row in selected]
+
+    limit = max(1, float(np.nanmax(np.abs(matrix))))
+
+    fig_height = max(6, 0.28 * len(selected) + 2)
+    fig, ax = plt.subplots(figsize=(9, fig_height))
+
+    image = ax.imshow(
+        matrix,
+        aspect="auto",
+        cmap="RdBu_r",
+        vmin=-limit,
+        vmax=limit,
+        interpolation="nearest",
+    )
+
+    ax.set_xticks(np.arange(len(STRESSES)))
+    ax.set_xticklabels(STRESSES)
+
+    ax.set_yticks(np.arange(len(labels)))
+    ax.set_yticklabels(labels)
+
+    ax.set_xlabel("Stress")
+    ax.set_ylabel("Transcription-factor target gene")
+    ax.set_title(
+        "Cross-stress expression patterns of significant TF target genes"
+    )
+
+    # A star marks a significant gene-stress comparison.
+    for i, row in enumerate(selected):
+        for j, stress in enumerate(STRESSES):
+            if is_true(row.get(f"{stress}_significant", "FALSE")):
+                ax.text(
+                    j, i, "*",
+                    ha="center",
+                    va="center",
+                    color="black",
+                    fontsize=11,
+                    fontweight="bold",
+                )
+
+    colorbar = fig.colorbar(image, ax=ax, pad=0.02)
+    colorbar.set_label("log2 fold change")
+
+    ax.text(
+        1.0, -0.08,
+        "* Adjusted p-value and fold-change significance criteria met",
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        fontsize=8,
+    )
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q2_FIGURES,
+        "Q2_TF_cross_stress_expression_heatmap"
+    )
+
+
+# ============================================================
+# Q2 FIGURE 5: TF FAMILY REPRESENTATION
+# ============================================================
+
+def q2_tf_family_distribution():
+    rows = read_tsv(
+        Q2_TABLES / "Q2_TF_family_summary.tsv"
+    )
+
+    family_genes = defaultdict(set)
+
+    for row in rows:
+        family = row.get("Family", "").strip()
+        gene = row.get("Gene_ID", "").strip()
+
+        if family and gene:
+            family_genes[family].add(gene)
+
+    if not family_genes:
+        print("Skipping Q2 TF family plot: no family records.")
+        return
+
+    # Count unique target genes associated with each family.
+    ranked = sorted(
+        family_genes.items(),
+        key=lambda item: len(item[1]),
+        reverse=True,
+    )[:15]
+
+    ranked.reverse()
+
+    labels = [item[0] for item in ranked]
+    values = [len(item[1]) for item in ranked]
+
+    fig_height = max(5, 0.35 * len(labels) + 1.8)
+    fig, ax = plt.subplots(figsize=(9, fig_height))
+
+    bars = ax.barh(
+        labels,
+        values,
+        color="#8B79A8",
+        edgecolor="black",
+        linewidth=0.4,
+    )
+
+    for bar, value in zip(bars, values):
+        ax.text(
+            bar.get_width() + 0.2,
+            bar.get_y() + bar.get_height() / 2,
+            str(value),
+            va="center",
+            fontsize=8,
+        )
+
+    ax.set_xlabel("Unique TF target genes")
+    ax.set_ylabel("TF family")
+    ax.set_title(
+        "Most represented transcription-factor families among significant TF records"
+    )
+    ax.grid(axis="x", linestyle="--", alpha=0.3)
+
+    fig.tight_layout()
+    save_figure(
+        fig, Q2_FIGURES,
+        "Q2_significant_TF_family_distribution"
+    )
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+    print("=" * 65)
+    print("MAIZE RNA-SEQ FIGURE GENERATION")
+    print("=" * 65)
+
+    print("\nQ1 figures")
+    q1_enrichment_dotplot()
+    q1_process_direction()
+    q1_shared_process_heatmap()
+
+    print("\nQ2 figures")
+    q2_candidate_counts()
+    q2_candidate_overlap()
+    q2_tf_summary()
+    q2_tf_heatmap()
+    q2_tf_family_distribution()
+
+    print("\n" + "=" * 65)
+    print("FIGURE GENERATION COMPLETED")
+    print("=" * 65)
+
+    print(f"\nQ1 figures: {Q1_FIGURES}")
+    print(f"Q2 figures: {Q2_FIGURES}")
+
+    print("\nGenerated PNG and PDF versions where source data were available.")
+
+
+if __name__ == "__main__":
+    main()

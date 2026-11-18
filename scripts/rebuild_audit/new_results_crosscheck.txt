@@ -1,0 +1,279 @@
+
+==========================================================================================
+Q1 — BACKGROUND AND ANNOTATION
+==========================================================================================
+Final enrichment background genes: 12418
+
+==========================================================================================
+Q1 — ALL SIGNIFICANT ENRICHMENT RESULTS
+==========================================================================================
+Total term-stress rows: 8
+Distinct GO terms: 7
+
+Cold: 1 enriched terms
+  GO:0009693 | ethylene biosynthetic process | GeneRatio=20/616 | BgRatio=112/12418 | RichFactor=0.17857142857142858 | FoldEnrichment=3.599837662337662 | p=5.347567966686181e-07 | padj=0.00034170959307124694 | q=0.00034170959307124694 | Count=20 | Genes=Zm00001d002535/Zm00001d002576/Zm00001d002592/Zm00001d003504/Zm00001d005936/Zm00001d011076/Zm00001d012321/Zm00001d017457/Zm00001d018122/Zm00001d018326/Zm00001d021978/Zm00001d024853/Zm00001d025524/Zm00001d026060/Zm00001d027483/Zm00001d033862/Zm00001d035677/Zm00001d036348/Zm00001d049594/Zm00001d052189
+
+Drought: 2 enriched terms
+  GO:0009773 | photosynthetic electron transport in photosystem I | GeneRatio=10/945 | BgRatio=28/12418 | RichFactor=0.35714285714285715 | FoldEnrichment=4.693121693121693 | p=2.294720896928241e-05 | padj=0.014663266531371458 | q=0.014663266531371458 | Count=10 | Genes=Zm00001d000164/Zm00001d003429/Zm00001d014919/Zm00001d020434/Zm00001d021620/Zm00001d024148/Zm00001d028562/Zm00001d034538/Zm00001d034904/Zm00001d042840
+  GO:0034484 | raffinose catabolic process | GeneRatio=5/945 | BgRatio=8/12418 | RichFactor=0.625 | FoldEnrichment=8.212962962962962 | p=0.00011643156469629446 | padj=0.03719988492046608 | q=0.03719988492046608 | Count=5 | Genes=Zm00001d019163/Zm00001d031300/Zm00001d031303/Zm00001d037480/Zm00001d039685
+
+Heat: 1 enriched terms
+  GO:0006457 | protein folding | GeneRatio=54/1657 | BgRatio=211/12418 | RichFactor=0.2559241706161137 | FoldEnrichment=1.917964001636029 | p=1.1446084135046675e-06 | padj=0.0007314047762294826 | q=0.0007314047762294826 | Count=54 | Genes=Zm00001d002770/Zm00001d003948/Zm00001d004243/Zm00001d006036/Zm00001d006126/Zm00001d007594/Zm00001d008209/Zm00001d008841/Zm00001d008980/Zm00001d010368/Zm00001d010652/Zm00001d010945/Zm00001d011102/Zm00001d012041/Zm00001d012955/Zm00001d013010/Zm00001d013842/Zm00001d014486/Zm00001d014792/Zm00001d015308/Zm00001d015520/Zm00001d015777/Zm00001d016512/Zm00001d017651/Zm00001d017809/Zm00001d018077/Zm00001d018298/Zm00001d020687/Zm00001d021518/Zm00001d028362/Zm00001d028396/Zm00001d028408/Zm00001d028423/Zm00001d029557/Zm00001d031569/Zm00001d033872/Zm00001d036035/Zm00001d037232/Zm00001d039566/Zm00001d040766/Zm00001d042372/Zm00001d045036/Zm00001d045336/Zm00001d046940/Zm00001d047302/Zm00001d047542/Zm00001d047548/Zm00001d047553/Zm00001d047726/Zm00001d048073/Zm00001d051607/Zm00001d053885/Zm00001d054015/Zm00001d054107
+
+Salinity: 4 enriched terms
+  GO:0009693 | ethylene biosynthetic process | GeneRatio=19/864 | BgRatio=112/12418 | RichFactor=0.16964285714285715 | FoldEnrichment=2.4382233796296298 | p=0.00024411247661530551 | padj=0.038996968139295055 | q=0.038996968139295055 | Count=19 | Genes=Zm00001d002592/Zm00001d003504/Zm00001d003533/Zm00001d005936/Zm00001d009568/Zm00001d017457/Zm00001d017645/Zm00001d018122/Zm00001d020789/Zm00001d021978/Zm00001d024843/Zm00001d024853/Zm00001d025524/Zm00001d026060/Zm00001d030945/Zm00001d034418/Zm00001d036348/Zm00001d041955/Zm00001d052170
+  GO:0009695 | jasmonic acid biosynthetic process | GeneRatio=25/864 | BgRatio=136/12418 | RichFactor=0.18382352941176472 | FoldEnrichment=2.6420377178649237 | p=6.464398237705355e-06 | padj=0.002065375236946861 | q=0.002065375236946861 | Count=25 | Genes=Zm00001d003457/Zm00001d003504/Zm00001d003533/Zm00001d004664/Zm00001d005826/Zm00001d008427/Zm00001d009568/Zm00001d011735/Zm00001d013135/Zm00001d013185/Zm00001d013333/Zm00001d013858/Zm00001d022122/Zm00001d022181/Zm00001d022451/Zm00001d025524/Zm00001d027519/Zm00001d028154/Zm00001d032049/Zm00001d032060/Zm00001d032457/Zm00001d040842/Zm00001d045470/Zm00001d049201/Zm00001d049954
+  GO:0005992 | trehalose biosynthetic process | GeneRatio=9/864 | BgRatio=31/12418 | RichFactor=0.2903225806451613 | FoldEnrichment=4.17271505376344 | p=0.000182962289110282 | padj=0.03897096758049006 | q=0.03897096758049006 | Count=9 | Genes=Zm00001d005658/Zm00001d005687/Zm00001d012748/Zm00001d018342/Zm00001d020272/Zm00001d020396/Zm00001d029371/Zm00001d032311/Zm00001d052060
+  GO:0009809 | lignin biosynthetic process | GeneRatio=16/864 | BgRatio=63/12418 | RichFactor=0.25396825396825395 | FoldEnrichment=3.6502057613168724 | p=4.318023646594897e-06 | padj=0.002065375236946861 | q=0.002065375236946861 | Count=16 | Genes=Zm00001d003129/Zm00001d004443/Zm00001d009146/Zm00001d012274/Zm00001d012980/Zm00001d013862/Zm00001d024314/Zm00001d032152/Zm00001d036293/Zm00001d038555/Zm00001d039535/Zm00001d043174/Zm00001d045206/Zm00001d049541/Zm00001d050455/Zm00001d051938
+
+==========================================================================================
+Q1 — EXPRESSION DIRECTION FOR EACH ENRICHED PROCESS
+==========================================================================================
+Cold | GO:0009693 | ethylene biosynthetic process | DEG=20 | Up=18 | Down=2 | Up%=0.9 | Down%=0.1 | Median=3.38158519015306 | Mean=3.46637180674717 | Direction=Predominantly upregulated
+Drought | GO:0009773 | photosynthetic electron transport in photosystem I | DEG=10 | Up=0 | Down=10 | Up%=0.0 | Down%=1.0 | Median=-1.716454749824545 | Mean=-1.938456769167218 | Direction=Predominantly downregulated
+Drought | GO:0034484 | raffinose catabolic process | DEG=5 | Up=2 | Down=3 | Up%=0.4 | Down%=0.6 | Median=-2.72112683961217 | Mean=-2.2741624050858276 | Direction=Mixed
+Heat | GO:0006457 | protein folding | DEG=54 | Up=45 | Down=9 | Up%=0.8333333333333334 | Down%=0.16666666666666666 | Median=2.924312134734095 | Mean=3.187265244111627 | Direction=Predominantly upregulated
+Salinity | GO:0009693 | ethylene biosynthetic process | DEG=19 | Up=18 | Down=1 | Up%=0.9473684210526315 | Down%=0.05263157894736842 | Median=2.95991867472889 | Mean=3.460801466546884 | Direction=Predominantly upregulated
+Salinity | GO:0009695 | jasmonic acid biosynthetic process | DEG=25 | Up=20 | Down=5 | Up%=0.8 | Down%=0.2 | Median=2.71491276700792 | Mean=2.288277337984666 | Direction=Predominantly upregulated
+Salinity | GO:0005992 | trehalose biosynthetic process | DEG=9 | Up=1 | Down=8 | Up%=0.1111111111111111 | Down%=0.8888888888888888 | Median=-2.31375349268081 | Mean=-1.8595632032612477 | Direction=Predominantly downregulated
+Salinity | GO:0009809 | lignin biosynthetic process | DEG=16 | Up=15 | Down=1 | Up%=0.9375 | Down%=0.0625 | Median=2.90836075664837 | Mean=2.7138683329580013 | Direction=Predominantly upregulated
+
+==========================================================================================
+Q1 — SHARED PROCESS SUMMARY
+==========================================================================================
+GO:0009693 | ethylene biosynthetic process | Stress count=2 | Stresses=Cold;Salinity | Directions=Cold:Predominantly upregulated;Salinity:Predominantly upregulated
+
+==========================================================================================
+Q2 — CANDIDATE COUNTS AND EXPRESSION DIRECTIONS
+==========================================================================================
+Cold: rows=616, unique genes=616, up=323, down=293, total=616
+Drought: rows=945, unique genes=945, up=478, down=467, total=945
+Heat: rows=1657, unique genes=1657, up=948, down=709, total=1657
+Salinity: rows=864, unique genes=864, up=583, down=281, total=864
+
+Total candidate-stress records: 4082
+Unique candidate genes across all stresses: 2885
+Genes occurring in exactly 1 stress condition(s): 1979
+Genes occurring in exactly 2 stress condition(s): 664
+Genes occurring in exactly 3 stress condition(s): 193
+Genes occurring in exactly 4 stress condition(s): 49
+
+==========================================================================================
+Q2 — CANDIDATE CROSS-STRESS OVERLAP TABLE
+==========================================================================================
+1 stresses: 1979 genes
+2 stresses: 664 genes
+3 stresses: 193 genes
+4 stresses: 49 genes
+
+==========================================================================================
+Q2 — TOP FIVE CANDIDATES PER STRESS
+==========================================================================================
+
+Cold
+Rank 1 | Zm00001d042107 | log2FC=4.76641264371717 | padj=9.68857976043905e-35 | baseMean=1744.64074762086 | Enzyme GO count=1 | Metabolic BP count=1
+Rank 2 | Zm00001d039524 | log2FC=8.11807098745983 | padj=1.05507766484903e-29 | baseMean=1526.94361902657 | Enzyme GO count=1 | Metabolic BP count=2
+Rank 3 | Zm00001d022451 | log2FC=8.38800526196111 | padj=8.44233399423561e-23 | baseMean=2023.57816808916 | Enzyme GO count=1 | Metabolic BP count=3
+Rank 4 | Zm00001d028806 | log2FC=5.39628986967212 | padj=2.01907128673089e-21 | baseMean=2560.91964887852 | Enzyme GO count=1 | Metabolic BP count=2
+Rank 5 | Zm00001d016719 | log2FC=7.08668308885508 | padj=3.11731553203749e-20 | baseMean=810.940530339731 | Enzyme GO count=2 | Metabolic BP count=2
+
+Drought
+Rank 1 | Zm00001d000316 | log2FC=-3.73218313643926 | padj=6.34296876232958e-31 | baseMean=62997.1494718976 | Enzyme GO count=3 | Metabolic BP count=7
+Rank 2 | Zm00001d046234 | log2FC=-8.58582465192804 | padj=1.45878037589586e-28 | baseMean=5238.08650266908 | Enzyme GO count=1 | Metabolic BP count=2
+Rank 3 | Zm00001d025707 | log2FC=-10.1320556357733 | padj=5.07014716970331e-27 | baseMean=5806.54702677474 | Enzyme GO count=2 | Metabolic BP count=4
+Rank 4 | Zm00001d037232 | log2FC=9.20145309053838 | padj=2.70756938501158e-23 | baseMean=903.445334909555 | Enzyme GO count=2 | Metabolic BP count=15
+Rank 5 | Zm00001d031300 | log2FC=-8.3964719787389 | padj=1.56296766690452e-21 | baseMean=7878.31971910607 | Enzyme GO count=2 | Metabolic BP count=1
+
+Heat
+Rank 1 | Zm00001d028408 | log2FC=13.4770944468691 | padj=1.33568618868252e-145 | baseMean=52760.2230707726 | Enzyme GO count=1 | Metabolic BP count=1
+Rank 2 | Zm00001d047799 | log2FC=12.0738555274914 | padj=6.0580411534079e-86 | baseMean=25539.8057960248 | Enzyme GO count=1 | Metabolic BP count=3
+Rank 3 | Zm00001d014486 | log2FC=5.58460749559075 | padj=2.06061808071929e-39 | baseMean=1955.55804334231 | Enzyme GO count=2 | Metabolic BP count=6
+Rank 4 | Zm00001d047302 | log2FC=4.87835657438366 | padj=4.70185903393294e-34 | baseMean=2272.32319404986 | Enzyme GO count=1 | Metabolic BP count=5
+Rank 5 | Zm00001d037232 | log2FC=10.5640841056204 | padj=1.79279885112016e-31 | baseMean=903.445334909555 | Enzyme GO count=2 | Metabolic BP count=15
+
+Salinity
+Rank 1 | Zm00001d038003 | log2FC=-6.14455708557556 | padj=1.90130531897583e-14 | baseMean=16668.7024230015 | Enzyme GO count=1 | Metabolic BP count=2
+Rank 2 | Zm00001d016719 | log2FC=6.08782785704319 | padj=2.82634861017782e-14 | baseMean=810.940530339731 | Enzyme GO count=2 | Metabolic BP count=2
+Rank 3 | Zm00001d042107 | log2FC=3.06608600556979 | padj=1.04701213010595e-13 | baseMean=1744.64074762086 | Enzyme GO count=1 | Metabolic BP count=1
+Rank 4 | Zm00001d019002 | log2FC=2.83572361867488 | padj=6.27084518194583e-12 | baseMean=2064.33721357854 | Enzyme GO count=1 | Metabolic BP count=2
+Rank 5 | Zm00001d025528 | log2FC=-4.61767837375929 | padj=2.68982738053094e-10 | baseMean=807.908720268983 | Enzyme GO count=3 | Metabolic BP count=4
+
+==========================================================================================
+Q2 — CANDIDATE-TO-GO ASSOCIATIONS
+==========================================================================================
+Total candidate-GO association records: 158
+Cold: 20 associations; 20 unique genes
+Drought: 15 associations; 15 unique genes
+Heat: 54 associations; 54 unique genes
+Salinity: 69 associations; 65 unique genes
+
+Shared candidate genes for GO terms found in multiple stresses:
+
+GO:0009693 | ethylene biosynthetic process | stresses=Cold;Salinity
+Unique genes across these stresses: 29
+Genes present in every listed stress: 10
+Shared genes: Zm00001d002592;Zm00001d003504;Zm00001d005936;Zm00001d017457;Zm00001d018122;Zm00001d021978;Zm00001d024853;Zm00001d025524;Zm00001d026060;Zm00001d036348
+
+==========================================================================================
+Q2 — SIGNIFICANT TF SUMMARY
+==========================================================================================
+Cold | tested=1522 | significant=136 | up=101 | down=35
+Drought | tested=1522 | significant=173 | up=89 | down=84
+Heat | tested=1522 | significant=212 | up=126 | down=86
+Salinity | tested=1522 | significant=159 | up=97 | down=62
+
+==========================================================================================
+Q2 — TF FAMILY COUNTS
+==========================================================================================
+Distinct TF families: 46
+Family-gene-stress records: 705
+
+Overall unique genes per family across all stress records:
+ERF: 52
+MYB: 33
+WRKY: 30
+MYB_related: 27
+bHLH: 27
+bZIP: 26
+NAC: 23
+HD-ZIP: 21
+GRAS: 19
+C2H2: 18
+ARF: 16
+HSF: 13
+G2-like: 12
+C3H: 11
+CO-like: 9
+Dof: 9
+GATA: 9
+AP2: 8
+DBB: 8
+TALE: 7
+SBP: 6
+TCP: 6
+B3: 4
+HB-other: 4
+LBD: 4
+Nin-like: 4
+ARR-B: 3
+LSD: 3
+NF-YA: 3
+RAV: 3
+Trihelix: 3
+ZF-HD: 3
+FAR1: 2
+GeBP: 2
+M-type_MADS: 2
+NF-X1: 2
+CAMTA: 1
+CPP: 1
+E2F/DP: 1
+EIL: 1
+GRF: 1
+NF-YB: 1
+NF-YC: 1
+S1Fa-like: 1
+STAT: 1
+VOZ: 1
+
+Cold — top TF families
+ERF: 28
+WRKY: 15
+NAC: 10
+GRAS: 8
+MYB: 8
+MYB_related: 8
+bHLH: 8
+bZIP: 7
+C2H2: 5
+Dof: 4
+TCP: 4
+ARF: 3
+DBB: 3
+GATA: 3
+HD-ZIP: 3
+
+Drought — top TF families
+ERF: 26
+MYB: 17
+MYB_related: 14
+bZIP: 14
+bHLH: 12
+HD-ZIP: 10
+G2-like: 8
+HSF: 8
+WRKY: 8
+GRAS: 7
+CO-like: 6
+C2H2: 5
+AP2: 4
+DBB: 4
+NAC: 4
+
+Heat — top TF families
+ERF: 26
+MYB: 20
+MYB_related: 15
+bHLH: 15
+C2H2: 13
+NAC: 13
+ARF: 12
+HSF: 12
+bZIP: 11
+HD-ZIP: 10
+WRKY: 9
+TALE: 7
+C3H: 6
+GRAS: 6
+AP2: 5
+
+Salinity — top TF families
+ERF: 23
+MYB: 17
+WRKY: 14
+bZIP: 12
+bHLH: 9
+CO-like: 8
+MYB_related: 8
+C2H2: 7
+G2-like: 7
+HD-ZIP: 7
+HSF: 7
+NAC: 6
+GRAS: 5
+DBB: 4
+Dof: 4
+
+==========================================================================================
+Q2 — TF MATRIX EXAMPLE GENES
+==========================================================================================
+
+Zm00001d000112 | Families=NAC
+  Cold: log2FC=0.407654752231439 | padj=0.834151833851606 | significant=FALSE
+  Drought: log2FC=0.708170204039936 | padj=0.608568937987582 | significant=FALSE
+  Heat: log2FC=1.94594863329942 | padj=0.00912698124687499 | significant=TRUE
+  Salinity: log2FC=2.14343703381635 | padj=0.00541764420767877 | significant=TRUE
+
+Zm00001d000045 | Families=Trihelix
+  Cold: log2FC=-1.11176950941407 | padj=0.16102103503437 | significant=FALSE
+  Drought: log2FC=-0.26885699432358 | padj=0.869131113909853 | significant=FALSE
+  Heat: log2FC=0.0182486000772178 | padj=0.993826823429171 | significant=FALSE
+  Salinity: log2FC=0.253195575776055 | padj=0.870190498635792 | significant=FALSE
+
+Zm00001d000303 | Families=HD-ZIP
+  Cold: log2FC=0 | padj=NA | significant=FALSE
+  Drought: log2FC=0 | padj=NA | significant=FALSE
+  Heat: log2FC=0 | padj=NA | significant=FALSE
+  Salinity: log2FC=6.8254302358121 | padj=NA | significant=FALSE
+
+==========================================================================================
+BASIC CONSISTENCY CHECKS
+==========================================================================================
+Q1 enrichment rows: 8
+Q1 direction rows: 8
+Q2 candidate-GO rows: 158
+Q2 candidate rows: 4082
+Q2 TF matrix rows: 1522
+Q2 TF family rows: 705
+
+Audit completed.
