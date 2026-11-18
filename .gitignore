@@ -221,3 +221,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+data/annotations/e2p2/pathway_final_genemodel_list.tsv
